@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="{% static 'js/htmx.min.js' %}"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="alpine.min.js"></script>
+</head>
+
+<body>
+    <!-- ================= HEADER ================= -->
+    <header>
+
+        <div class="header-left">
+            <div>SCE</div>
+            <div>JSE</div>
+            <div>AE</div>
+            <div>SS</div>
+        </div>
+
+        <div class="header-center">
+            <h1>Operations Log book</h1>
+            <div id="clock">00:00:00</div>
+        </div>
+
+        <div class="header-right">
+            <!-- Login Info -->
+            <div class="user-info">
+                Logged in as:
+                
+                <strong>Udit Ojha</strong>
+
+                <a href="#" class="logout-btn">
+                    Logout
+                </a>
+            </div>
+            <div>Date</div>
+            <div>Shift</div>
+            <div>Crew</div>
+        </div>
+    </header>
+    <!-- ================= SIDEBAR ================= -->
+    <!--nav_items is variable in python back-end-->
+    <nav>
+        <h3>Systems List</h3>
+        <ul>
+            <!-- Corrected structure: loop wraps the list items -->
+            {% for item in nav_items %}
+            <li>
+                <a href="{{ item.url }}">
+                    {{ item.name }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+    <!-- Collpasible Area List -->
+    <div x-data="{ open: false }">
+    <h3 @click="open = !open" style="cursor: pointer; user-select: none;">
+        Area List 
+        <span x-text="open ? '▲' : '▼'" style="font-size: 0.8em; margin-left: 5px;"></span>
+    </h3>
+
+    <ul x-show="open" x-transition>
+        <li>Area-1</li>
+        <li>Area-2</li>
+        <li>Area-3</li>
+        <li>Area-4</li>    
+        <li>Area-5</li>    
+        <li>Area-6</li>    
+    </ul>
+    </div>
+        <!--Remove comment to get Non-collapsible version of Area List -->
+        <!-- <h3> Area List</h3>
+        <ul>
+            <li>Area-1</li>
+            <li>Area-2</li>
+            <li>Area-3</li>
+            <li>Area-4</li>    
+            <li>Area-5</li>    
+            <li>Area-6</li>    
+        </ul> -->
+    </nav>
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main>
+
+        {% block content %}
+
+        <h2>Main Content Area</h2>
+
+        <p>
+            This area updates based on the selected
+            system from the left navigation bar.
+        </p>
+
+        {% endblock %}
+
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <a href="#">Contacts</a>
+
+        <a href="#">Previous Logs</a>
+
+        <a href="https://webmail.barc.gov.in/">Check Email</a>
+
+        <a href="#">Event Reports &
+            Manuals</a>
+
+        <a href="/about/">About</a>
+
+    </footer>
+
+    <!-- ================= CLOCK SCRIPT ================= -->
+
+    <script>
+
+        function updateClock() {
+
+            const now = new Date();
+
+            let hours = now.getHours().toString().padStart(2, '0');
+            let minutes = now.getMinutes().toString().padStart(2, '0');
+            let seconds = now.getSeconds().toString().padStart(2, '0');
+
+            document.getElementById("clock").innerHTML =
+                `${hours}:${minutes}:${seconds}`;
+
+            let dateString = now.toDateString();
+
+            document.getElementById("date").innerHTML = dateString;
+        }
+
+        setInterval(updateClock, 1000);
+
+        updateClock();
+
+    </script>
+</body>
+
+</html>
